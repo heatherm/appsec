@@ -1,5 +1,5 @@
 /****************************************************************************
- * spell.c
+ * dictionary.c
  *
  * Application Security, Assignment 1
  *
@@ -11,45 +11,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "spell.h"
-
-// int main(int argc, char * argv[])
-// {
-//   if(argc != 2){
-//     printf("Usage: $ ./spell_check a_tale_of_two_cities.txt wordlist.txt\n");
-//     return 0;
-//   }
-
-// 	FILE *file = fopen(argv[1], "r");
-  
-//   if(file == NULL){
-//     printf("File to spell check does not exist\n");
-//     return 0;
-//   }
-
-//   char *line = NULL;
-//   size_t len = 0;
-
-//   while(getline(&line, &len, file) != -1) {
-//       hashmap_t
-//       printf("line length: %zd\n", strlen(line));
-//   }
-
-//   printf("\n\nMax line size: %zd\n", len);
-
-//   fclose(file);
-//   free(line); 
-// }
+#include "dictionary.h"
 
 // Hash table is an array of linked lists.
-node *hashtable[HASH_SIZE];
-
-int hash_function(const char *word);
+node* hashtable[HASH_SIZE];
 
 // Maps a word to an integer value to place it in the hash table.
 // Sum the value of each character in the word, then find the 
 // remainder after dividing by the size of the hash table.
-int hash_function(const char *word)
+int hash_function(const char* word)
 {
     int sum = 0;
     int word_length = strlen(word);
