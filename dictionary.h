@@ -50,6 +50,7 @@ typedef node* hashmap_t;
  **/
 int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]);
 
+
 /**
  * Returns true if word is in dictionary else false.
  */
