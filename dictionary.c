@@ -32,8 +32,3 @@ int hash_function(const char* word)
     int bucket = sum % HASH_SIZE;
     return bucket;
 }
-
-bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]){ return true; }
-bool check_word(const char* word, hashmap_t hashtable[]){ return true;}
-int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]){ return 0;}
-
