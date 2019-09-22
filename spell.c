@@ -120,21 +120,29 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
         --read;
       } 
 
-      // Tokenize string
-      char *token;
-      token = strtok(line, " ,.@#$!");
+      // Tokenize string on spaces
+      char* token;
+      token = strtok(line, " ");
       if (token == NULL)
           return -1;
       do
       {
-          bool result = check_word(token, hashtable); 
-          if (!result){
-            misspelled[num_misspelled] = token;
-            num_misspelled++;
-          }
-          
-          line = NULL;
-      } while ((token = strtok(NULL, " ,.@#$!")) != NULL);
+        // Strip start and end punctuation
+        int i;
+        char* p;
+        for(i=strlen(token)-1; ispunct(token[i]);--i)
+            token[i]='\0';
+  
+        for(p=token;ispunct(*p);++p);
+
+        // Validate remaining word/token
+        bool result = check_word(p, hashtable); 
+        if (!result){
+          misspelled[num_misspelled] = p;
+          num_misspelled++;
+        }
+        line = NULL;
+      } while ((token = strtok(NULL, " ")) != NULL);
   }
 
   // Handle any unexpected errors

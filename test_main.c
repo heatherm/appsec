@@ -54,6 +54,25 @@ START_TEST(test_check_words_normal)
 }
 END_TEST
 
+START_TEST(test_check_words_punct)
+{
+    hashmap_t hashtable[HASH_SIZE];
+    ck_assert(true);
+    load_dictionary(DICTIONARY, hashtable);
+    char* expected[3];
+    expected[0] = "j.ust";
+    char *misspelled[MAX_MISSPELLED];
+    FILE *fp = fopen("tests/punct.txt", "r");
+    int num_misspelled = check_words(fp, hashtable, misspelled);
+    ck_assert(num_misspelled == 1);
+    bool test = strlen(misspelled[0]) == strlen(expected[0]);
+    int len1 = strlen(misspelled[0]);
+    int len2 = strlen(expected[0]);
+    ck_assert_msg(test, "%d!=%d", len1, len2);
+    ck_assert_msg(strcmp(misspelled[0], expected[0]) == 0);
+}
+END_TEST
+
 Suite *
 check_word_suite(void)
 {
@@ -64,6 +83,7 @@ check_word_suite(void)
     tcase_add_test(check_word_case, test_dictionary_normal);
     tcase_add_test(check_word_case, test_check_word_normal);
     tcase_add_test(check_word_case, test_check_words_normal);
+    tcase_add_test(check_word_case, test_check_words_punct);
     suite_add_tcase(suite, check_word_case);
 
     return suite;
