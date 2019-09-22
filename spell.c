@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 #include "dictionary.h"
 
 void lower_string(char s[]) {
@@ -113,7 +114,11 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
       exit(1);
   }
 
-  while ((read = getline(&line, &len, fp)) != -1) {
+  read = getline(&line, &len, fp);
+  if (errno == ENOMEM || errno == EOVERFLOW) {
+    num_misspelled++;
+  }
+  while (read >= 0) {
       if ((line)[read - 1] == '\n') 
       {
         (line)[read - 1] = '\0';
@@ -143,6 +148,8 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
         }
         line = NULL;
       } while ((token = strtok(NULL, " ")) != NULL);
+
+      read = getline(&line, &len, fp);
   }
 
   // Handle any unexpected errors
