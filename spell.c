@@ -14,6 +14,8 @@
 #include <errno.h>
 #include "dictionary.h"
 
+#define MAXCHAR 1000
+
 void lower_string(char s[]) {
    int c = 0;
    
@@ -32,55 +34,55 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]){
       hashtable[i] = NULL;
     }
 
-    // Open dictionary file
-    FILE* file = fopen(dictionary_file, "r");
-    if (file == NULL)
-    {
-        puts("No dictionary file found.");
-        return false;
-    }
+    // // Open dictionary file
+    // FILE* file = fopen(dictionary_file, "r");
+    // if (file == NULL)
+    // {
+    //     puts("No dictionary file found.");
+    //     return false;
+    // }
 
-    // Initiate variable to store current word
-    char* dword = calloc(LENGTH+ 1,sizeof(char)); 
+    // // Initiate variable to store current word
+    // char* dword = calloc(LENGTH+ 1,sizeof(char)); 
     
-    // For each line, get the word
-    char* line = NULL;  
-    size_t len = 45;
-    ssize_t read;
+    // // For each line, get the word
+    // char* line = NULL;  
+    // size_t len = 45;
+    // ssize_t read;
 
-    line = (char *)malloc(len * sizeof(char));
-    if( line == NULL)
-    {
-        perror("Not able to allocate buffer for line.");
-        exit(1);
-    }
+    // line = (char *)malloc(len * sizeof(char));
+    // if( line == NULL)
+    // {
+    //     perror("Not able to allocate buffer for line.");
+    //     exit(1);
+    // }
 
-    while ((read = getline(&line, &len, file)) != -1) {
-        if ((line)[read - 1] == '\n') 
-        {
-          (line)[read - 1] = '\0';
-          --read;
-        } 
-        dword = line;
-        lower_string(dword);
-        node* new_node = malloc(sizeof(node));
-        strcpy(new_node->word,dword);
+    // while ((read = getline(&line, &len, file)) != -1) {
+    //     if ((line)[read - 1] == '\n') 
+    //     {
+    //       (line)[read - 1] = '\0';
+    //       --read;
+    //     } 
+    //     dword = line;
+    //     lower_string(dword);
+    //     node* new_node = malloc(sizeof(node));
+    //     strcpy(new_node->word,dword);
 
-        // Add new lowered word to hashtable
-        int hashkey = hash_function(dword);
-        new_node->next = hashtable[hashkey];
-        hashtable[hashkey] = new_node; 
-    }
+    //     // Add new lowered word to hashtable
+    //     int hashkey = hash_function(dword);
+    //     new_node->next = hashtable[hashkey];
+    //     hashtable[hashkey] = new_node; 
+    // }
 
-    // Handle any unexpected errors
-    if (ferror(file)) {
-        puts("Experienced an error with the dictionary file.");
-    }
+    // // Handle any unexpected errors
+    // if (ferror(file)) {
+    //     puts("Experienced an error with the dictionary file.");
+    // }
 
-    // Free the line and close the file
-    free(line);
-    line = NULL;
-    fclose(file);
+    // // Free the line and close the file
+    // free(line);
+    // line = NULL;
+    // fclose(file);
     return true;    
 }
 
@@ -103,31 +105,28 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
   int num_misspelled = 0;
 
   // For each line, get the word
-  char* line = NULL;  
-  size_t len = 1000;
-  ssize_t read;
+  // char* line = NULL;  
+  // size_t len = 0;
+  // ssize_t read;
+  char str[MAXCHAR];
 
-  line = (char *)malloc(len * sizeof(char));
-  if( line == NULL)
-  {
-      perror("Not able to allocate buffer for line.");
-      exit(1);
-  }
+  // line = (char *)malloc(len * sizeof(char));
+  // if( line == NULL)
+  // {
+  //     perror("Not able to allocate buffer for line.");
+  //     exit(1);
+  // }
 
-  read = getline(&line, &len, fp);
-  if (errno == ENOMEM || errno == EOVERFLOW) {
-    num_misspelled++;
-  }
-  while (read >= 0) {
-      if ((line)[read - 1] == '\n') 
-      {
-        (line)[read - 1] = '\0';
-        --read;
-      } 
+    while (fgets(str, MAXCHAR, fp) != NULL){
+      // if ((line)[read - 1] == '\n') 
+      // {
+      //   (line)[read - 1] = '\0';
+      //   --read;
+      // } 
 
       // Tokenize string on spaces
       char* token;
-      token = strtok(line, " ");
+      token = strtok(str, " ");
       if (token == NULL)
           return -1;
       do
@@ -146,10 +145,8 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
           misspelled[num_misspelled] = p;
           num_misspelled++;
         }
-        line = NULL;
+        // line = NULL;
       } while ((token = strtok(NULL, " ")) != NULL);
-
-      read = getline(&line, &len, fp);
   }
 
   // Handle any unexpected errors
@@ -158,8 +155,8 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
   }
 
   // Free the line and close the file
-  free(line);
-  line = NULL;
+  // free(line);
+  // line = NULL;
   fclose(fp);
 
   return num_misspelled;
