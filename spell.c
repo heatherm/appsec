@@ -110,10 +110,10 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
   ssize_t read;
 
   while ((read = getline(&line, &len, fp)) != -1) {
-      if (strlen(line) > 5000) {
-        num_misspelled++;
-        return num_misspelled;
-      }
+    if (strlen(line) > 120 || line == NULL) {
+      num_misspelled++;
+      exit(1);
+    }  
       // Remove newline captured by getline function
       if ((line)[read - 1] == '\n') 
       {
