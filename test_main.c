@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #define DICTIONARY "wordlist_files/wordlist.txt"
+#define DICTIONARY_LONG_WORD "wordlist_files/wordlist_long_word.txt"
 #define TESTDICT "wordlist_files/test_wordlist.txt"
 #define JUSTICE "wordlist_files/justice.txt"
 
@@ -85,6 +86,25 @@ START_TEST(test_check_words_overflow)
 }
 END_TEST
 
+START_TEST(test_check_words_overflow_dictionary)
+{
+    hashmap_t hashtable[HASH_SIZE];
+    ck_assert(true);
+    int i;
+    for(i = 0; i < 100; i++){
+        load_dictionary(DICTIONARY, hashtable);
+    }
+}
+END_TEST
+
+START_TEST(test_check_words_overflow_dictionary_long_word)
+{
+    hashmap_t hashtable[HASH_SIZE];
+    load_dictionary(DICTIONARY_LONG_WORD, hashtable);
+    ck_assert(true);
+}
+END_TEST
+
 Suite *
 check_word_suite(void)
 {
@@ -97,6 +117,8 @@ check_word_suite(void)
     tcase_add_test(check_word_case, test_check_words_normal);
     tcase_add_test(check_word_case, test_check_words_punct);
     tcase_add_test(check_word_case, test_check_words_overflow);
+    tcase_add_test(check_word_case, test_check_words_overflow_dictionary);
+    tcase_add_test(check_word_case, test_check_words_overflow_dictionary_long_word);
     suite_add_tcase(suite, check_word_case);
 
     return suite;

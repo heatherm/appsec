@@ -49,6 +49,9 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]){
     ssize_t read;
 
     while ((read = getline(&line, &len, file)) != -1) {
+        if (strlen(line) > 45) {
+          continue;
+        }      
         // Remove newline captured by getline function
         if ((line)[read - 1] == '\n') 
         {
@@ -107,6 +110,10 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[]) {
   ssize_t read;
 
   while ((read = getline(&line, &len, fp)) != -1) {
+      if (strlen(line) > 5000) {
+        num_misspelled++;
+        return num_misspelled;
+      }
       // Remove newline captured by getline function
       if ((line)[read - 1] == '\n') 
       {
