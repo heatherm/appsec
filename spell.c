@@ -48,6 +48,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]){
     size_t len = 45;
     ssize_t read;
 
+
     while ((read = getline(&line, &len, file)) != -1) {
         if (strlen(line) > 45) {
           continue;

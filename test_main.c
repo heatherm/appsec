@@ -105,6 +105,19 @@ START_TEST(test_check_words_overflow_dictionary_long_word)
 }
 END_TEST
 
+START_TEST(test_check_word_buffer_overflow)
+{
+    hashmap_t hashtable[HASH_SIZE];
+    load_dictionary(DICTIONARY, hashtable);
+    char incorrect_word[500000];
+    for(int i = 0; i < 499999; i++)
+        incorrect_word[i] = 'A';
+    incorrect_word[499999] = 0;
+    ck_assert(!check_word(incorrect_word, hashtable));
+}
+END_TEST
+
+
 Suite *
 check_word_suite(void)
 {
@@ -119,6 +132,8 @@ check_word_suite(void)
     tcase_add_test(check_word_case, test_check_words_overflow);
     tcase_add_test(check_word_case, test_check_words_overflow_dictionary);
     tcase_add_test(check_word_case, test_check_words_overflow_dictionary_long_word);
+    tcase_add_test(check_word_case, test_check_word_buffer_overflow);
+    
     suite_add_tcase(suite, check_word_case);
 
     return suite;
